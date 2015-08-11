@@ -1,2 +1,3 @@
 # selenium-webdriver-util
-A loose coupling utilities for selenium-webdriver
+
+A loosely coupled utilities for [selenium-webdriver](https://code.google.com/p/selenium/wiki/WebDriverJs)

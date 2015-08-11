@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<script>
+var appendItem = function(text, isDisplayed) {
+  var isDisplayed = (isDisplayed === undefined) ? true : isDisplayed;
+  var $ul = document.querySelector('ul');
+  var $li = document.createElement('li');
+  var textNode = document.createTextNode(text);
+  if (!isDisplayed) {
+    $li.style.display = 'none';
+  }
+  $li.appendChild(textNode);
+  $ul.appendChild($li);
+};
+var appendHiddenItem = function(text) {
+  appendItem(text, false);
+};
+
+setTimeout(function() {
+  appendHiddenItem('item-1');
+  setTimeout(function() {
+    appendHiddenItem('item-2');
+    setTimeout(function() {
+      appendItem('item-3');
+      setTimeout(function() {
+        appendItem('item-4');
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}, 1000);
+</script>
+<body>
+  <ul></ul>
+</body>
+</html>

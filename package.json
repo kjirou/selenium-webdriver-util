@@ -1,0 +1,35 @@
+{
+  "name": "selenium-webdriver-util",
+  "description": "A loosely coupled utilities for selenium-webdriver",
+  "version": "0.0.1",
+  "author": "kjirou",
+  "bugs": {
+    "url": "https://github.com/kjirou/selenium-webdriver-util/issues"
+  },
+  "dependencies": {
+    "async": "1.4.2",
+    "lodash": "3.10.1"
+  },
+  "devDependencies": {
+    "fixpack": "2.2.0",
+    "mocha": "2.2.5",
+    "selenium-webdriver": "2.44.0"
+  },
+  "homepage": "https://github.com/kjirou/selenium-webdriver-util#readme",
+  "keywords": [
+    "selenium",
+    "selenium-webdriver",
+    "util",
+    "utils",
+    "webdriver"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kjirou/selenium-webdriver-util.git"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
