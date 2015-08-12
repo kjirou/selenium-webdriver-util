@@ -61,6 +61,26 @@ var waitForElement = function waitForElement(driver, locator, options) {
 };
 
 var filterElementsByHtml = function filterElementsByHtml(elements, keyword) {
+  var flows = elements.map(function(element) {
+    return webdriver.promise.createFlow(function() {
+      return element
+        .getInnerHtml()
+        .then(function(html) {
+          if (html.indexOf(keyword) !== -1) {
+            return webdriver.promise.fulfilled(element);
+          }
+        })
+      ;
+    });
+  });
+
+  return webdriver.promise
+    .all(flows)
+    .then(function(results) {
+      var cleanedResults = results.filter(function(v) { return !!v; });
+      return webdriver.promise.fulfilled(cleanedResults);
+    })
+  ;
 };
 
 var selectOptions = function selectOptions(selectElement, locator) {

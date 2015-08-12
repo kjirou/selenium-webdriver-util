@@ -121,4 +121,40 @@ describe('selenium-webdriver-util', function() {
       ;
     });
   });
+
+
+  describe('filterElementsByHtml', function() {
+
+    it('should be', function(done) {
+      driver
+        .get('file://' + SUPPORT_ROOT + '/list.html')
+        .then(function() {
+          return driver.findElements({ css: 'ul li' });
+        })
+        .then(function(elements) {
+          return webdriver.promise.fulfilled()
+            .then(function() {
+              return webdriverUtil.filterElementsByHtml(elements, 'ra');
+            })
+            .then(function(elements) {
+              assert.strictEqual(elements.length, 2);
+            })
+            .then(function() {
+              return webdriverUtil.filterElementsByHtml(elements, 'anana');
+            })
+            .then(function(elements) {
+              assert.strictEqual(elements.length, 1);
+            })
+            .then(function() {
+              return webdriverUtil.filterElementsByHtml(elements, 'Tomato');
+            })
+            .then(function(elements) {
+              assert.strictEqual(elements.length, 0);
+            })
+          ;
+        })
+        .then(done, done)
+      ;
+    });
+  });
 });
