@@ -3,7 +3,7 @@ var _ = require('lodash');
 var webdriver = require('selenium-webdriver');
 
 
-var waitForElements = function waitForElements(driver, locator, options) {
+var waitForElements = function waitForElements(driverOrElement, locator, options) {
   options = _.assign({
     shouldBeDisplayed: false,
     min: 1,
@@ -11,11 +11,17 @@ var waitForElements = function waitForElements(driver, locator, options) {
     limit: 30000
   }, options || {});
 
+  var scopeElement = driverOrElement;
+  var driver = driverOrElement;
+  if (driverOrElement instanceof webdriver.WebElement) {
+    driver = scopeElement.getDriver();
+  }
+
   var duration = 0;
   var dfd = webdriver.promise.defer();
   setTimeout(function() {
     var thisTask = arguments.callee;
-    driver
+    scopeElement
       .findElements(locator)
       .then(function(elements) {
         if (options.shouldBeDisplayed) {
@@ -52,8 +58,8 @@ var waitForElements = function waitForElements(driver, locator, options) {
   return new webdriver.WebElementPromise(driver, dfd.promise);
 };
 
-var waitForElement = function waitForElement(driver, locator, options) {
-  return waitForElements(driver, locator, options)
+var waitForElement = function waitForElement(driverOrElement, locator, options) {
+  return waitForElements(driverOrElement, locator, options)
     .then(function(elements) {
       return webdriver.promise.fulfilled(elements[0]);
     })

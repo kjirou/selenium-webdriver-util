@@ -24,7 +24,7 @@ describe('selenium-webdriver-util', function() {
 
   describe('waitForElements', function() {
 
-    it('should wait for elements', function(done) {
+    it('should wait for a 1 element at a minimum', function(done) {
       driver
         .get('file://' + SUPPORT_ROOT + '/show-elements-slowly.html')
         .then(function() {
@@ -49,6 +49,22 @@ describe('selenium-webdriver-util', function() {
         })
         .then(function(elements) {
           assert.strictEqual(elements.length, 4);
+        })
+        .then(done, done)
+      ;
+    });
+
+    it('should wait for scoped elements', function(done) {
+      driver
+        .get('file://' + SUPPORT_ROOT + '/show-elements-slowly.html')
+        .then(function() {
+          return driver.findElement({ id: 'container' });
+        })
+        .then(function(element) {
+          return webdriverUtil.waitForElements(element, webdriver.By.css('ul li'), { min: 2 });
+        })
+        .then(function(elements) {
+          assert.strictEqual(elements.length, 2);
         })
         .then(done, done)
       ;
