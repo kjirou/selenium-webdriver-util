@@ -13,7 +13,7 @@ describe('selenium-webdriver-util', function() {
 
   before(function() {
     driver = new webdriver.Builder()
-      .forBrowser('chrome')
+      .forBrowser(process.env.TRAVIS ? 'firefox' : 'chrome')
       .build();
   });
 
