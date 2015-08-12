@@ -53,7 +53,11 @@ var waitForElements = function waitForElements(driver, locator, options) {
 };
 
 var waitForElement = function waitForElement(driver, locator, options) {
-  return waitForElements(driver, locator, options)[0] || null;
+  return waitForElements(driver, locator, options)
+    .then(function(elements) {
+      return webdriver.promise.fulfilled(elements[0]);
+    })
+  ;
 };
 
 var filterElementsByHtml = function filterElementsByHtml(elements, keyword) {
