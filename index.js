@@ -66,13 +66,16 @@ var waitForElement = function waitForElement(driverOrElement, locator, options) 
   ;
 };
 
-var filterElementsByHtml = function filterElementsByHtml(elements, keyword) {
+var filterElementsByHtml = function filterElementsByHtml(elements, keywordOrMatcher) {
   var flows = elements.map(function(element) {
     return webdriver.promise.createFlow(function() {
       return element
         .getInnerHtml()
         .then(function(html) {
-          if (html.indexOf(keyword) !== -1) {
+          if (
+            typeof keywordOrMatcher === 'string' && html.indexOf(keywordOrMatcher) !== -1 ||
+            keywordOrMatcher instanceof RegExp && keywordOrMatcher.test(html)
+          ) {
             return webdriver.promise.fulfilled(element);
           }
         })

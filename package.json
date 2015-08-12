@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "async": "1.4.2",
+    "escape-regexp": "0.0.1",
     "lodash": "3.10.1"
   },
   "devDependencies": {

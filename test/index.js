@@ -141,7 +141,7 @@ describe('selenium-webdriver-util', function() {
 
   describe('filterElementsByHtml', function() {
 
-    it('should be', function(done) {
+    it('should filter by keyword', function(done) {
       driver
         .get('file://' + SUPPORT_ROOT + '/list.html')
         .then(function() {
@@ -166,6 +166,26 @@ describe('selenium-webdriver-util', function() {
             })
             .then(function(elements) {
               assert.strictEqual(elements.length, 0);
+            })
+          ;
+        })
+        .then(done, done)
+      ;
+    });
+
+    it('should filter by matcher', function(done) {
+      driver
+        .get('file://' + SUPPORT_ROOT + '/list.html')
+        .then(function() {
+          return driver.findElements({ css: 'ul li' });
+        })
+        .then(function(elements) {
+          return webdriver.promise.fulfilled()
+            .then(function() {
+              return webdriverUtil.filterElementsByHtml(elements, /(banana|cherry|grape)/i);
+            })
+            .then(function(elements) {
+              assert.strictEqual(elements.length, 3);
             })
           ;
         })
