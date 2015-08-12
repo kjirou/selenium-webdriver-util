@@ -173,4 +173,43 @@ describe('selenium-webdriver-util', function() {
       ;
     });
   });
+
+
+  describe('selectOption', function() {
+
+    it('should select a option', function(done) {
+      driver
+        .get('file://' + SUPPORT_ROOT + '/select.html')
+        .then(function() {
+          return driver.findElement({ id: 'single' });
+        })
+        .then(function(selectElement) {
+          return webdriverUtil.selectOption(selectElement, 'ra');
+        })
+        .then(function(optionElement) {
+          return optionElement.getInnerHtml();
+        })
+        .then(function(html) {
+          assert.strictEqual(html, 'Grape', '"Grape" is selected instead of the "Orange"');
+        })
+        .then(done, done)
+      ;
+    });
+
+    it('should not throw a error if can not find the option', function(done) {
+      driver
+        .get('file://' + SUPPORT_ROOT + '/select.html')
+        .then(function() {
+          return driver.findElement({ id: 'single' });
+        })
+        .then(function(selectElement) {
+          return webdriverUtil.selectOption(selectElement, 'Tomato');
+        })
+        .then(function(optionElement) {
+          assert.strictEqual(optionElement, null);
+        })
+        .then(done, done)
+      ;
+    });
+  });
 });

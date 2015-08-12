@@ -55,7 +55,7 @@ var waitForElements = function waitForElements(driverOrElement, locator, options
     ;
   }, 1);
 
-  return new webdriver.WebElementPromise(driver, dfd.promise);
+  return dfd.promise;
 };
 
 var waitForElement = function waitForElement(driverOrElement, locator, options) {
@@ -89,16 +89,32 @@ var filterElementsByHtml = function filterElementsByHtml(elements, keyword) {
   ;
 };
 
-var selectOptions = function selectOptions(selectElement, locator) {
+var selectOptions = function selectOptions(selectElement, label, options) {
+  options = _.assign({
+    max: 99999999
+  }, options || {});
+
+  return selectElement.findElements({ css: 'option' })
+    .then(function(elements) {
+      return filterElementsByHtml(elements, label);
+    })
+    .then(function(elements) {
+      elements = elements.slice(0, options.max);
+      return webdriver.promise.all(elements.map(function(element) {
+        return element.click();
+      })).then(function() {
+        return webdriver.promise.fulfilled(elements);
+      });
+    });
+  ;
 };
 
-var selectOption = function selectOption(selectElement, locator) {
-};
-
-var selectOptionsByLabel = function selectOptionsByLabel(selectElement, label) {
-};
-
-var selectOptionByLabel = function selectOptionByLabel(selectElement, label) {
+var selectOption = function selectOption(selectElement, label) {
+  return selectOptions(selectElement, label, { max: 1 })
+    .then(function(elements) {
+      return webdriver.promise.fulfilled(elements[0] || null);
+    })
+  ;
 };
 
 
@@ -106,8 +122,7 @@ module.exports = {
   waitForElements: waitForElements,
   waitForElement: waitForElement,
   filterElementsByHtml: filterElementsByHtml,
-  selectOptions: selectOptions,
-  selectOption: selectOption,
-  selectOptionsByLabel: selectOptionsByLabel,
-  selectOptionByLabel: selectOptionByLabel
+  // Multi selection is not working now Ref) #1
+  //selectOptions: selectOptions,
+  selectOption: selectOption
 };
