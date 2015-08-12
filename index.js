@@ -3,11 +3,25 @@ var _ = require('lodash');
 var webdriver = require('selenium-webdriver');
 
 
+/*
+ * Wait to find expected elements
+ *
+ * If can not find elements then it returns a rejected promise
+ *
+ * @param {webdriver.WebDriver|webdriver.WebElement} driverOrElement
+ * @param {webdriver.Locator} locator
+ * @param {Objet|undefined} options
+ * @return {webdriver.promise.Promise<Array<webdriver.WebElement>>}
+ */
 var waitForElements = function waitForElements(driverOrElement, locator, options) {
   options = _.assign({
+    // Target `isDisplayed === true` only
     shouldBeDisplayed: false,
+    // Necessary element count
     min: 1,
+    // Timer circle (ms)
     interval: 100,
+    // Timer limit (ms)
     limit: 30000
   }, options || {});
 
@@ -58,6 +72,14 @@ var waitForElements = function waitForElements(driverOrElement, locator, options
   return dfd.promise;
 };
 
+/*
+ * Wait to find a expected element
+ *
+ * @param {webdriver.WebDriver|webdriver.WebElement} driverOrElement
+ * @param {webdriver.Locator} locator
+ * @param {Objet|undefined} options
+ * @return {webdriver.promise.Promise<webdriver.WebElement>}
+ */
 var waitForElement = function waitForElement(driverOrElement, locator, options) {
   return waitForElements(driverOrElement, locator, options)
     .then(function(elements) {
@@ -66,6 +88,13 @@ var waitForElement = function waitForElement(driverOrElement, locator, options) 
   ;
 };
 
+/*
+ * Filter elements by keyword or RegExp matcher
+ *
+ * @param {Array<webdriver.WebElement>} elements
+ * @param {string|RegExp} keywordOrMatcher
+ * @return {webdriver.promise.Promise<Array<webdriver.WebElement>>}
+ */
 var filterElementsByHtml = function filterElementsByHtml(elements, keywordOrMatcher) {
   var flows = elements.map(function(element) {
     return webdriver.promise.createFlow(function() {
@@ -112,6 +141,13 @@ var selectOptions = function selectOptions(selectElement, label, options) {
   ;
 };
 
+/*
+ * Select a option tag from a select tag
+ *
+ * @param {webdriver.WebElement} Parent select tag
+ * @param {string} Option tag's label, it is parsed as inner-html
+ * @return {webdriver.promise.Promise<webdriver.WebElement|null>}
+ */
 var selectOption = function selectOption(selectElement, label) {
   return selectOptions(selectElement, label, { max: 1 })
     .then(function(elements) {
