@@ -16,7 +16,7 @@ var webdriver = require('selenium-webdriver');
 var waitForElements = function waitForElements(driverOrElement, locator, options) {
   options = _.assign({
     // Target `isDisplayed === true` only
-    shouldBeDisplayed: false,
+    shouldBeDisplayed: true,
     // Necessary element count
     min: 1,
     // Timer circle (ms)

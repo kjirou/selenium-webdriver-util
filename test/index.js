@@ -35,7 +35,7 @@ describe('selenium-webdriver-util', function() {
           return elements[0].getInnerHtml();
         })
         .then(function(html) {
-          assert.strictEqual(html, 'item-1');
+          assert.strictEqual(html, 'item-3');
         })
         .then(done, done)
       ;
@@ -45,10 +45,10 @@ describe('selenium-webdriver-util', function() {
       driver
         .get('file://' + SUPPORT_ROOT + '/show-elements-slowly.html')
         .then(function() {
-          return webdriverUtil.waitForElements(driver, webdriver.By.css('ul li'), { min: 4 });
+          return webdriverUtil.waitForElements(driver, webdriver.By.css('ul li'), { min: 2 });
         })
         .then(function(elements) {
-          assert.strictEqual(elements.length, 4);
+          assert.strictEqual(elements.length, 2);
         })
         .then(done, done)
       ;
@@ -70,18 +70,18 @@ describe('selenium-webdriver-util', function() {
       ;
     });
 
-    it('should wait for displayed elements', function(done) {
+    it('should wait for hidden elements', function(done) {
       driver
         .get('file://' + SUPPORT_ROOT + '/show-elements-slowly.html')
         .then(function() {
-          return webdriverUtil.waitForElements(driver, webdriver.By.css('ul li'), { shouldBeDisplayed: true });
+          return webdriverUtil.waitForElements(driver, webdriver.By.css('ul li'), { shouldBeDisplayed: false });
         })
         .then(function(elements) {
           assert.strictEqual(elements.length, 1);
           return elements[0].getInnerHtml();
         })
         .then(function(html) {
-          assert.strictEqual(html, 'item-3');
+          assert.strictEqual(html, 'item-1');
         })
         .then(done, done)
       ;
@@ -116,7 +116,7 @@ describe('selenium-webdriver-util', function() {
           return element.getInnerHtml();
         })
         .then(function(html) {
-          assert.strictEqual(html, 'item-1');
+          assert.strictEqual(html, 'item-3');
         })
         .then(done, done)
       ;
