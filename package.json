@@ -1,7 +1,7 @@
 {
   "name": "selenium-webdriver-util",
   "description": "A loosely coupled utilities for selenium-webdriver",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "kjirou",
   "bugs": {
     "url": "https://github.com/kjirou/selenium-webdriver-util/issues"
