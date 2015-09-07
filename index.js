@@ -156,6 +156,23 @@ var selectOption = function selectOption(selectElement, label) {
   ;
 };
 
+var breakpoint = function breakpoint() {
+  console.log('Enter breakpoint mode');
+  var dfd = webdriver.promise.defer();
+  var originalRawMode = process.stdin.isRaw;
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+  var onData = function onData(key) {
+    process.stdin.removeListener('data', onData);
+    process.stdin.pause()
+    process.stdin.setRawMode(originalRawMode);
+    dfd.fulfill();
+    console.log('Exit breakpoint mode');
+  };
+  process.stdin.addListener('data', onData);
+  return dfd.promise;
+};
+
 
 module.exports = {
   waitForElements: waitForElements,
@@ -163,5 +180,6 @@ module.exports = {
   filterElementsByHtml: filterElementsByHtml,
   // Multi selection is not working now Ref) #1
   //selectOptions: selectOptions,
-  selectOption: selectOption
+  selectOption: selectOption,
+  breakpoint: breakpoint
 };

@@ -27,6 +27,8 @@ It has the following static functions.
   - Filter elements by keyword or RegExp matcher
 - `selectOption`
   - Select a option tag from a select tag
+- `breakpoint`
+  - To stop running tests until receive a key from the terminal
 
 Please refer function's comment too!
 
