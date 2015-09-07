@@ -232,4 +232,20 @@ describe('selenium-webdriver-util', function() {
       ;
     });
   });
+
+  describe('breakpoint', function() {
+
+    it('should be', function(done) {
+      driver
+        .get('file://' + SUPPORT_ROOT + '/list.html')
+        .then(function() {
+          setTimeout(function() {
+            process.stdin.emit('data', 'a');
+          }, 1000);
+          return webdriverUtil.breakpoint();
+        })
+        .then(done, done)
+      ;
+    });
+  });
 });
