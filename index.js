@@ -4,6 +4,39 @@ var webdriver = require('selenium-webdriver');
 
 
 /*
+ * Filter elements by keyword or RegExp matcher
+ *
+ * @param {Array<webdriver.WebElement>} elements
+ * @param {string|RegExp} keywordOrMatcher
+ * @return {webdriver.promise.Promise<Array<webdriver.WebElement>>}
+ */
+var filterElementsByHtml = function filterElementsByHtml(elements, keywordOrMatcher) {
+  var flows = elements.map(function(element) {
+    return webdriver.promise.createFlow(function() {
+      return element
+        .getInnerHtml()
+        .then(function(html) {
+          if (
+            typeof keywordOrMatcher === 'string' && html.indexOf(keywordOrMatcher) !== -1 ||
+            keywordOrMatcher instanceof RegExp && keywordOrMatcher.test(html)
+          ) {
+            return webdriver.promise.fulfilled(element);
+          }
+        })
+      ;
+    });
+  });
+
+  return webdriver.promise
+    .all(flows)
+    .then(function(results) {
+      var cleanedResults = results.filter(function(v) { return !!v; });
+      return webdriver.promise.fulfilled(cleanedResults);
+    })
+  ;
+};
+
+/*
  * Wait to find expected elements
  *
  * If can not find elements then it returns a rejected promise
@@ -17,6 +50,8 @@ var waitForElements = function waitForElements(driverOrElement, locator, options
   options = _.assign({
     // Target `isDisplayed === true` only
     shouldBeDisplayed: true,
+    // Filter by html or RegExp
+    matcher: null,
     // Necessary element count
     min: 1,
     // Timer circle (ms)
@@ -37,6 +72,7 @@ var waitForElements = function waitForElements(driverOrElement, locator, options
     var thisTask = arguments.callee;
     scopeElement
       .findElements(locator)
+      // Apply shouldBeDisplayed
       .then(function(elements) {
         if (options.shouldBeDisplayed) {
           var dfd_ = webdriver.promise.defer();
@@ -50,6 +86,14 @@ var waitForElements = function waitForElements(driverOrElement, locator, options
             dfd_.fulfill(elements);
           });
           return dfd_.promise;
+        } else {
+          return webdriver.promise.fulfilled(elements);
+        }
+      })
+      // Apply matcher
+      .then(function(elements) {
+        if (options.matcher) {
+          return filterElementsByHtml(elements, options.matcher);
         } else {
           return webdriver.promise.fulfilled(elements);
         }
@@ -84,39 +128,6 @@ var waitForElement = function waitForElement(driverOrElement, locator, options) 
   return waitForElements(driverOrElement, locator, options)
     .then(function(elements) {
       return webdriver.promise.fulfilled(elements[0]);
-    })
-  ;
-};
-
-/*
- * Filter elements by keyword or RegExp matcher
- *
- * @param {Array<webdriver.WebElement>} elements
- * @param {string|RegExp} keywordOrMatcher
- * @return {webdriver.promise.Promise<Array<webdriver.WebElement>>}
- */
-var filterElementsByHtml = function filterElementsByHtml(elements, keywordOrMatcher) {
-  var flows = elements.map(function(element) {
-    return webdriver.promise.createFlow(function() {
-      return element
-        .getInnerHtml()
-        .then(function(html) {
-          if (
-            typeof keywordOrMatcher === 'string' && html.indexOf(keywordOrMatcher) !== -1 ||
-            keywordOrMatcher instanceof RegExp && keywordOrMatcher.test(html)
-          ) {
-            return webdriver.promise.fulfilled(element);
-          }
-        })
-      ;
-    });
-  });
-
-  return webdriver.promise
-    .all(flows)
-    .then(function(results) {
-      var cleanedResults = results.filter(function(v) { return !!v; });
-      return webdriver.promise.fulfilled(cleanedResults);
     })
   ;
 };

@@ -101,6 +101,19 @@ describe('selenium-webdriver-util', function() {
         .then(done, done)
       ;
     });
+
+    it('should apply options.matcher', function(done) {
+      driver
+        .get('file://' + SUPPORT_ROOT + '/list.html')
+        .then(function() {
+          return webdriverUtil.waitForElements(driver, webdriver.By.css('ul li'), { matcher: 'an' });
+        })
+        .then(function(elements) {
+          assert.strictEqual(elements.length, 2);
+        })
+        .then(done, done)
+      ;
+    });
   });
 
 
